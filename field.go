@@ -1,14 +1,8 @@
 package structs
 
 import (
-	"errors"
 	"fmt"
 	"reflect"
-)
-
-var (
-	errNotExported = errors.New("field is not exported")
-	errNotSettable = errors.New("field is not settable")
 )
 
 // Field represents a single struct field that encapsulates high level
@@ -92,12 +86,12 @@ func (f *Field) Set(val interface{}) error {
 func (f *Field) Settable() error {
 	// we can't set unexported fields, so be sure this field is exported
 	if !f.IsExported() {
-		return errNotExported
+		return fmt.Errorf("field '%s' is not exported", f.Name())
 	}
 
 	// do we get here? not sure...
 	if !f.value.CanSet() {
-		return errNotSettable
+		return fmt.Errorf("field '%s' is not settable", f.Name())
 	}
 
 	return nil
